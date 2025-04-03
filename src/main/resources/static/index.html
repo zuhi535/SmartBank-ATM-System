@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecureBank - Online Banking</title>
+  <style>
+    :root {
+        --primary: #1a73e8;
+        --secondary: #4285f4;
+        --accent: #fbbc04;
+        --light: #f8f9fa;
+        --dark: #202124;
+        --success: #34a853;
+        --danger: #ea4335;
+        --gray: #5f6368;
+        --light-gray: #dadce0;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background-color: #f5f5f5;
+        color: var(--dark);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Header Styles */
+    header {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+        font-size: 24px;
+        color: var(--primary);
+    }
+
+    .logo-icon {
+        margin-right: 10px;
+        color: var(--primary);
+        font-size: 28px;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+    }
+
+    nav ul li {
+        margin-left: 25px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: var(--dark);
+        font-weight: 500;
+        font-size: 16px;
+        transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+        color: var(--primary);
+    }
+
+    .user-actions {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .logout-btn {
+        background: none;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 10px;
+    }
+
+    /* Main Content */
+    .main-content {
+        padding: 30px 0;
+    }
+
+    .welcome-banner {
+        background-color: var(--primary);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .welcome-text h1 {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+
+    .welcome-text p {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    .last-login {
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+    }
+
+    /* Account Cards */
+    .accounts-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: var(--dark);
+    }
+
+    .account-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .account-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .account-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .account-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .account-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background-color: var(--light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: var(--primary);
+        font-size: 20px;
+    }
+
+    .account-details h3 {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .account-number {
+        color: var(--gray);
+        font-size: 14px;
+    }
+
+    .account-balance {
+        text-align: right;
+    }
+
+    .balance-label {
+        font-size: 12px;
+        color: var(--gray);
+        margin-bottom: 5px;
+    }
+
+    .balance-amount {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .available-amount {
+        font-size: 14px;
+        color: var(--success);
+    }
+
+    .card-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+
+    .card-action-btn {
+        background: none;
+        border: none;
+        color: var(--primary);
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    /* Right Sidebar */
+    .sidebar {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+    }
+
+    .sidebar-section {
+        margin-bottom: 25px;
+    }
+
+    .sidebar-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .sidebar-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+        color: var(--dark);
+    }
+
+    /* Payments Due */
+    .payment-item {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .payment-item:last-child {
+        border-bottom: none;
+    }
+
+    .payment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+    }
+
+    .payment-name {
+        font-weight: 500;
+    }
+
+    .payment-amount {
+        font-weight: 600;
+    }
+
+    .payment-date {
+        font-size: 12px;
+        color: var(--gray);
+    }
+
+    .no-payments {
+        padding: 20px 0;
+        text-align: center;
+        color: var(--gray);
+    }
+
+    /* Quick Transfer Section */
+    .transfer-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-row {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-label {
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: var(--gray);
+    }
+
+    .form-control {
+        padding: 10px;
+        border: 1px solid var(--light-gray);
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .form-select {
+        padding: 10px;
+        border: 1px solid var(--light-gray);
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: white;
+    }
+
+    .transfer-btn {
+        padding: 12px;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 10px;
+    }
+
+    .transfer-btn:hover {
+        background-color: var(--secondary);
+    }
+
+    /* Tabs */
+    .tabs {
+        display: flex;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .tab {
+        padding: 10px 20px;
+        background: none;
+        border: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--gray);
+        cursor: pointer;
+        position: relative;
+    }
+
+    .tab.active {
+        color: var(--primary);
+    }
+
+    .tab.active:after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary);
+    }
+
+    /* Recent Transactions */
+    .transactions {
+        margin-top: 20px;
+    }
+
+    .transaction-item {
+        padding: 15px 0;
+        border-bottom: 1px solid var(--light-gray);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .transaction-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .transaction-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    .transaction-details h4 {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 3px;
+    }
+
+    .transaction-date {
+        font-size: 12px;
+        color: var(--gray);
+    }
+
+    .transaction-amount {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .amount-positive {
+        color: var(--success);
+    }
+
+    .amount-negative {
+        color: var(--danger);
+    }
+
+    /* Quick Links */
+    .quick-links {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .quick-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--light);
+        border-radius: 8px;
+        padding: 15px 10px;
+        text-decoration: none;
+        transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .quick-link:hover {
+        transform: translateY(-2px);
+        background-color: rgba(26, 115, 232, 0.1);
+    }
+
+    .quick-link-icon {
+        font-size: 24px;
+        color: var(--primary);
+        margin-bottom: 8px;
+    }
+
+    .quick-link-text {
+        font-size: 12px;
+        color: var(--dark);
+        font-weight: 500;
+        text-align: center;
+    }
+
+    /* Footer */
+    footer {
+        background-color: white;
+        padding: 20px 0;
+        margin-top: 40px;
+        border-top: 1px solid var(--light-gray);
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .footer-links ul {
+        display: flex;
+        list-style: none;
+    }
+
+    .footer-links ul li {
+        margin-right: 20px;
+    }
+
+    .footer-links ul li a {
+        text-decoration: none;
+        color: var(--gray);
+        font-size: 14px;
+        transition: color 0.3s;
+    }
+
+    .footer-links ul li a:hover {
+        color: var(--primary);
+    }
+
+    .copyright {
+        font-size: 14px;
+        color: var(--gray);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        .quick-links {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .footer-content {
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container header-container">
+    <div class="logo">
+      <span class="logo-icon">🔒</span>
+      SecureBank
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Dashboard</a></li>
+        <li><a href="#">Accounts</a></li>
+        <li><a href="#">Transfers</a></li>
+        <li><a href="#">Payments</a></li>
+        <li><a href="#">Cards</a></li>
+      </ul>
+    </nav>
+    <div class="user-actions">
+      <button class="logout-btn">Log out</button>
+      <div class="user-icon">J</div>
+    </div>
+  </div>
+</header>
+
+<main class="container main-content">
+  <div class="welcome-banner">
+    <div class="welcome-text">
+      <h1>Good morning, Jane</h1>
+      <p class="last-login">You last logged in: 20/03/2023 at 12:45 PM (Your local time)</p>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="main-dashboard">
+      <section class="accounts-section">
+        <h2 class="section-title">Your Accounts</h2>
+        <div class="account-cards">
+          <div class="account-card">
+            <div class="account-info">
+              <div class="account-icon">💼</div>
+              <div class="account-details">
+                <h3>Complete Access</h3>
+                <div class="account-number">xxx-xxx xxx-xxx</div>
+              </div>
+            </div>
+            <div class="account-balance">
+              <div class="balance-label">Balance</div>
+              <div class="balance-amount">$32,105.67</div>
+              <div class="available-amount">$32,750.00 available</div>
+            </div>
+            <div class="card-actions">
+              <button class="card-action-btn">⋮</button>
+            </div>
+          </div>
+
+          <div class="account-card">
+            <div class="account-info">
+              <div class="account-icon">💰</div>
+              <div class="account-details">
+                <h3>NetBank Saver</h3>
+                <div class="account-number">xxx-xxx xxx-xxx</div>
+              </div>
+            </div>
+            <div class="account-balance">
+              <div class="balance-label">Balance</div>
+              <div class="balance-amount">$9,653.14</div>
+              <div class="available-amount">$9,653.14 available</div>
+            </div>
+            <div class="card-actions">
+              <button class="card-action-btn">⋮</button>
+            </div>
+          </div>
+
+          <div class="account-card">
+            <div class="account-info">
+              <div class="account-icon">💳</div>
+              <div class="account-details">
+                <h3>Gold Credit Card</h3>
+                <div class="account-number">xxxx xxxx xxxx 2704</div>
+              </div>
+            </div>
+            <div class="account-balance">
+              <div class="balance-label">Balance</div>
+              <div class="balance-amount">$2,145.95</div>
+              <div class="available-amount">$2,145.95 available</div>
+            </div>
+            <div class="card-actions">
+              <button class="card-action-btn">⋮</button>
+            </div>
+          </div>
+
+          <div class="account-card">
+            <div class="account-info">
+              <div class="account-icon">💎</div>
+              <div class="account-details">
+                <h3>Mastercard Diamond</h3>
+                <div class="account-number">xxxx xxxx xxxx 9134</div>
+              </div>
+            </div>
+            <div class="account-balance">
+              <div class="balance-label">Balance</div>
+              <div class="balance-amount">$6,145.95</div>
+              <div class="available-amount">$6,000.00 available</div>
+            </div>
+            <div class="card-actions">
+              <button class="card-action-btn">⋮</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="transactions-section">
+        <h2 class="section-title">Recent Activity</h2>
+        <div class="tabs">
+          <button class="tab active">All Transactions</button>
+          <button class="tab">Pending</button>
+          <button class="tab">Scheduled</button>
+        </div>
+        <div class="transactions">
+          <div class="transaction-item">
+            <div class="transaction-info">
+              <div class="transaction-icon">🛒</div>
+              <div class="transaction-details">
+                <h4>Grocery Market</h4>
+                <div class="transaction-date">Today, 10:23 AM</div>
+              </div>
+            </div>
+            <div class="transaction-amount amount-negative">-$85.23</div>
+          </div>
+          <div class="transaction-item">
+            <div class="transaction-info">
+              <div class="transaction-icon">⚡</div>
+              <div class="transaction-details">
+                <h4>Utility Bill Payment</h4>
+                <div class="transaction-date">Yesterday, 2:45 PM</div>
+              </div>
+            </div>
+            <div class="transaction-amount amount-negative">-$120.50</div>
+          </div>
+          <div class="transaction-item">
+            <div class="transaction-info">
+              <div class="transaction-icon">💼</div>
+              <div class="transaction-details">
+                <h4>Salary Deposit</h4>
+                <div class="transaction-date">Mar 15, 9:00 AM</div>
+              </div>
+            </div>
+            <div class="transaction-amount amount-positive">+$3,250.00</div>
+          </div>
+          <div class="transaction-item">
+            <div class="transaction-info">
+              <div class="transaction-icon">🍔</div>
+              <div class="transaction-details">
+                <h4>Fast Food Restaurant</h4>
+                <div class="transaction-date">Mar 14, 7:32 PM</div>
+              </div>
+            </div>
+            <div class="transaction-amount amount-negative">-$24.99</div>
+          </div>
+          <div class="transaction-item">
+            <div class="transaction-info">
+              <div class="transaction-icon">🎭</div>
+              <div class="transaction-details">
+                <h4>Movie Tickets</h4>
+                <div class="transaction-date">Mar 13, 6:15 PM</div>
+              </div>
+            </div>
+            <div class="transaction-amount amount-negative">-$42.00</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-links-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-links">
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon">💸</div>
+            <div class="quick-link-text">Pay Bills</div>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon">🔄</div>
+            <div class="quick-link-text">Transfer Money</div>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon">📊</div>
+            <div class="quick-link-text">Spending Insights</div>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon">🔔</div>
+            <div class="quick-link-text">Notifications</div>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon">🔐</div>
+            <div class="quick-link-text">Security Center</div>
+          </a>
+          <a href="#" class="quick-link">
+            <div class="quick-link-icon">❓</div>
+            <div class="quick-link-text">Support</div>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Payments Due</h3>
+        <div class="no-payments">
+          No payments due in the next 7 days
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Quick Transfer</h3>
+        <form class="transfer-form">
+          <div class="form-row">
+            <label class="form-label">From</label>
+            <select class="form-select">
+              <option>Complete Access - xxx-xxx</option>
+              <option>NetBank Saver - xxx-xxx</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">To</label>
+            <select class="form-select">
+              <option>Select account</option>
+              <option>Gold Credit Card - xxxx 2704</option>
+              <option>Mastercard Diamond - xxxx 9134</option>
+              <option>Add new recipient</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Amount</label>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Enter amount">
+            </div>
+          </div>
+          <button type="button" class="transfer-btn">Transfer Now</button>
+        </form>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Financial Snapshot</h3>
+        <div class="financial-summary">
+          <div class="summary-item">
+            <div class="summary-label">Total Assets</div>
+            <div class="summary-value">$50,000.00</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Total Liabilities</div>
+            <div class="summary-value">$10,000.00</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Net Position</div>
+            <div class="summary-value">$40,000.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container footer-content">
+    <div class="footer-links">
+      <ul>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Security</a></li>
+        <li><a href="#">Help</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="copyright">
+      © 2023 SecureBank. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Simple JavaScript to handle basic interactions
+  document.addEventListener('DOMContentLoaded', function() {
+      // Tab switching
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+              tabs.forEach(t => t.classList.remove('active'));
+              this.classList.add('active');
+          });
+      });
+
+      // Card actions menu - would be expanded in a real application
+      const actionButtons = document.querySelectorAll('.card-action-btn');
+      actionButtons.forEach(button => {
+          button.addEventListener('click', function() {
+              alert('Account options would appear here');
+          });
+      });
+
+      // Transfer button action
+      const transferBtn = document.querySelector('.transfer-btn');
+      if (transferBtn) {
+          transferBtn.addEventListener('click', function() {
+              alert('Transfer functionality would be implemented here');
+          });
+      }
+
+      // Quick links
+      const quickLinks = document.querySelectorAll('.quick-link');
+      quickLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+              e.preventDefault();
+              alert(`You clicked on ${this.querySelector('.quick-link-text').textContent}`);
+          });
+      });
+
+      // Logout button
+      const logoutBtn = document.querySelector('.logout-btn');
+      if (logoutBtn) {
+          logoutBtn.addEventListener('click', function() {
+              if (confirm('Are you sure you want to log out?')) {
+                  alert('You would be logged out here');
+              }
+          });
+      }
+  });
+</script>
+</body>
+</html>
